@@ -1,0 +1,148 @@
+<div class="container">
+    <div class="card border-primary col">
+        <div class="card-header">Consulta si tienes comparendos</div>
+        <div class="card-body text-primary row justify-content-center">
+            <form [formGroup]="formularioInfoVolantes" class="row">
+                <div class="form-group row-3">
+                    <div class="col">
+                        <label>Tipo de identificación: </label>
+                    </div>
+                    <div class="col"> 
+                        <select class="form-control"  name="selectOneMenuDocumento" formControlName="selectOneMenuDocumento">
+                            <option>Seleccionar</option>
+                            <option *ngFor="let doc of tipoDocs" value="{{doc.id}}">{{doc.nombreTipoIdentificacion}}
+                            </option>
+                        </select>
+                    </div>
+                    <div *ngIf="formularioInfoVolantes.controls['selectOneMenuDocumento'].invalid" class="col" style="padding-top: 20px;">
+                        <span class="alert alert-danger" role="alert">
+                            Por favor seleccione una opción
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group row-3">
+                    <div class="col">
+                        <label>Número de identificación: </label>
+                    </div>
+                    <div class="col"> 
+                        <input type="text" name="txtDocumento" formControlName="txtDocumento">
+                    </div>
+                    <div *ngIf="formularioInfoVolantes.controls['txtDocumento'].invalid && formularioInfoVolantes.controls['txtDocumento'].dirty"  class="col" style="padding-top: 20px;">
+                        <span class="invalid-feedback" role="alert">
+                            Por favor escriba un documento
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group row-3" style="padding-left: 10%; padding-top: 5%;">
+                    <button (click)="consultarCartera()" class="btn btn-primary" [disabled] = "!formularioInfoVolantes.valid"
+                        >Buscar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="card border-primary col">
+        <div class="card-header">Datos Persona</div>
+        <div class="card-body text-primary">
+            <div class="row-12">
+                <div class="row-6">
+                    <div class="col-6">
+                        <label>Tipo de identificación: </label>
+                        <label style="padding-left: 10px;"> {{cartera.resumen_cartera.nombre_tipo_documento}} </label>
+                    </div>
+                </div>
+                <div class="row-6">
+                    <div class="col">
+                        <label>Nombres: </label>
+                        <label style="padding-left: 10px;"> {{concatenarNombre()}}</label>
+                    </div>
+                </div>
+                <div class="row-6">
+                    <div class="col">
+                        <label>Cantidad de comparendos: </label>
+                        <label style="padding-left: 10px;"> {{cartera.resumen_cartera.cantidad_registros}}</label>
+                    </div>
+                </div>
+                <div class="row-6">
+                    <div class="col">
+                        <label>Fecha y hora de consulta: </label>
+                        <label style="padding-left: 10px;"> {{cartera.resumen_cartera.fecha_hora_consulta}}</label>
+                    </div>
+                </div>
+                <div class="row-6">
+                    <div class="col">
+                        <label>Total de multas: </label>
+                        <label style="padding-left: 10px;"> {{cartera.resumen_cartera.total_multa | currency}}</label>
+                    </div>
+                </div>
+                <div class="row-6">
+                    <div class="col">
+                        <label>Total de intereses: </label>
+                        <label style="padding-left: 10px;">
+                            {{cartera.resumen_cartera.total_intereses | currency}}</label>
+                    </div>
+                </div>
+                <div class="row-6">
+                    <div class="col">
+                        <label>Total de costas procesales: </label>
+                        <label style="padding-left: 10px;">
+                            {{cartera.resumen_cartera.costas_procesales | currency}}</label>
+                    </div>
+                </div>
+                <div class="row-6">
+                    <div class="col">
+                        <label>Total de cartera: </label>
+                        <label style="padding-left: 10px;"> {{cartera.resumen_cartera.total_cartera | currency}}</label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div style="overflow-x:auto;">
+        <table class="table  table-striped ">
+            <thead>
+                <tr>
+                    <th scope="col">Pagar</th>
+                    <th scope="col">Tipo Cartera</th>
+                    <th scope="col">Número Comparendo</th>
+                    <th scope="col">Fecha Imposición</th>
+                    <th scope="col">Placa Vehículo</th>
+                    <th scope="col">Resolución</th>
+                    <th scope="col">Organismo De Transito</th>
+                    <th scope="col">Infracción</th>
+                    <th scope="col">Agente Impositor</th>
+                    <th scope="col">Valor Multa</th>
+                    <th scope="col">Intereses</th>
+                    <th scope="col">Costos Procesales</th>
+                    <th scope="col">Saldo Pagar</th>
+                    <th scope="col">Total A Pagar</th>
+                    <th scope="col">Valor Descuento</th>
+                    <th scope="col">Comparecencia Virtual</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let detalle of cartera.detalle_cartera">
+                    <td> <button class="btn btn-primary" (click)="traerReferenciaPSE(detalle)">Pago PSE</button> </td>
+                    <td>{{ detalle.tipo_cartera }}</td>
+                    <td>{{ detalle.numero_comparendo}}</td>
+                    <td>{{ detalle.fecha_imposicion }}</td>
+                    <td>{{ detalle.placa_vehiculo  }}</td>
+                    <td>{{ detalle.resolucion }}</td>
+                    <td>{{ detalle.nombre_organismo_transito }}</td>
+                    <td>{{ detalle.codigo_infraccion }}</td>
+                    <td>{{ detalle.nombre_agente_impositor }}</td>
+                    <td>{{ detalle.valor_multa }}</td>
+                    <td>{{ detalle.valor_intereses }}</td>
+                    <td>{{ detalle.costas_procesales }}</td>
+                    <td>{{ detalle.saldo_pagar}}</td>
+                    <td>{{ detalle.total_pagar}}</td>
+                    <td>{{ detalle.valor_con_descuento}}</td>
+                    <td>{{ detalle.descripcion_infraccion}}</td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

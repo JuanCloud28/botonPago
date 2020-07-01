@@ -1,0 +1,170 @@
+<div class="container">
+    <div class="card border-primary col">
+        <div class="card-header">Información Comparendo</div>
+        <div class="card-body text-primary">
+            <div class="form-group row">
+                <div class="col">
+                    <label>Referencia de pago: </label>
+                </div>
+                <div class="col">
+                    <label>{{volante.referencia}}</label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col">
+                    <label>Razón Social: </label>
+                </div>
+                <div class="col">
+                    <label>{{volante.razonSocial}}</label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col">
+                    <label>Número de comparendo: </label>
+                </div>
+                <div class="col">
+                    <label>{{volante.numeroComparendo}}</label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col">
+                    <label>Tipo de identificación: </label>
+                </div>
+                <div class="col">
+                    <label>{{volante.tipoIdentificacion}}</label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col">
+                    <label>Número de identificación: </label>
+                </div>
+                <div class="col">
+                    <label>{{volante.numeroIdentificacion}}</label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col">
+                    <label>Nombre del deudor: </label>
+                </div>
+                <div class="col">
+                    <label>{{volante.nombreDeudor}}</label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col">
+                    <label>Total a pagar: </label>
+                </div>
+                <div class="col">
+                    <label>{{volante.total | currency}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card border-primary col">
+        <div class="card-header">Por favor ingrese los datos de la persona que realizará el pago</div>
+        <div class="card-body text-primary">
+            <form [formGroup]="formularioInfoPago">
+                <div class="form-group col-md-9">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Tipo Documento</label>
+                            <select class="form-control" name="tipoDocumento" formControlName="tipoDocumento">
+                                <option>Seleccionar</option>
+                                <option *ngFor="let doc of tipoDocs" value="{{doc.codigTipoIdentificacion}}">
+                                    {{doc.nombreTipoIdentificacion}}
+                                </option>
+                            </select>
+                            <div *ngIf="formularioInfoPago.controls['tipoDocumento'].invalid && formularioInfoPago.controls['tipoDocumento'].dirty"
+                                class="col" style="padding-top: 20px;">
+                                <small>
+                                    <span class="alert alert-danger" role="alert">
+                                        Por favor seleccione una opción
+                                    </span>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Nombre</label>
+                            <input type="text" class="form-control" name="nombre" formControlName="nombre">
+                            <div *ngIf="formularioInfoPago.controls['nombre'].invalid && formularioInfoPago.controls['nombre'].dirty"
+                                class="col" style="padding-top: 20px;">
+                                <small>
+                                    <span class="alert alert-danger" role="alert">
+                                        Por favor llenar campo
+                                    </span>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Teléfono</label>
+                            <input type="text" class="form-control" name="telefono" formControlName="telefono">
+                            <div *ngIf="formularioInfoPago.controls['telefono'].invalid && formularioInfoPago.controls['telefono'].dirty"
+                                class="col" style="padding-top: 20px;">
+                                <small>
+                                    <span class="alert alert-danger" role="alert">
+                                        Por favor llenar campo
+                                    </span>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Número Documento</label>
+                            <input type="text" class="form-control" name="numeroDocumento"
+                                formControlName="numeroDocumento">
+                            <div *ngIf="formularioInfoPago.controls['numeroDocumento'].invalid && formularioInfoPago.controls['numeroDocumento'].dirty"
+                                class="col" style="padding-top: 20px;">
+                                <small>
+                                    <span class="alert alert-danger" role="alert">
+                                        Por favor llenar campo
+                                    </span>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Apellido</label>
+                            <input type="text" class="form-control" name="apellido" formControlName="apellido">
+                            <div *ngIf="formularioInfoPago.controls['apellido'].invalid && formularioInfoPago.controls['apellido'].dirty"
+                                class="col" style="padding-top: 20px;">
+                                <small>
+                                    <span class="alert alert-danger" role="alert">
+                                        Por favor llenar campo
+                                    </span>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Correo electrónico</label>
+                            <input type="text" class="form-control" name="txtCorreoElectronico"
+                                placeholder="correo@ejemplo.com" formControlName="correoElectronico">
+                            <div *ngIf="formularioInfoPago.controls['correoElectronico'].invalid && formularioInfoPago.controls['correoElectronico'].dirty"
+                                class="col" style="padding-top: 20px;">
+                                <small>
+                                    <span class="alert alert-danger" role="alert">
+                                        Por favor escriba un Email valido
+                                    </span>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-5">
+                    <div class="form-row">
+                        <div class="justify-content-center">
+                            <button (click)="redireccionarPSE()" [disabled]="!formularioInfoPago.valid" type="submit">
+                                <img [src]="img" class="img-fluid">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </form>
+
+        </div>
+    </div>
+</div>

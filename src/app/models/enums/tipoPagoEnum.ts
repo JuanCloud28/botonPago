@@ -1,0 +1,4 @@
+export enum tipoPagoEnum{
+    PAGO_TRAMITE = 'PAGO TRAMITE',
+    PAGO_COMPARENDO = 'PAGO COMPARENDO'
+}
