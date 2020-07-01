@@ -3,16 +3,28 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { InformacionPagoComponent } from './informacion-pago/informacion-pago.component';
+import { InformacionVolantesComponent } from './informacion-volantes/informacion-volantes.component';
+import { HttpClientModule} from '@angular/common/http'
+import { VolanteDepagoService } from './services/volanteDePago/volante-depago.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    InformacionPagoComponent,
+    InformacionVolantesComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
+    ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    VolanteDepagoService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
