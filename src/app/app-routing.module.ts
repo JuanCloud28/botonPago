@@ -10,6 +10,9 @@ const routes: Routes = [
     path: 'infoVolante', component: InformacionVolantesComponent
   },
   {
+    path: 'infoVolante/:organismo', component: InformacionVolantesComponent
+  },
+  {
     path: 'infoPago', component: InformacionPagoComponent
   },
   {

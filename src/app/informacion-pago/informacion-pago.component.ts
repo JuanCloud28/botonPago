@@ -15,7 +15,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class InformacionPagoComponent implements OnInit {
   referencia :ReferenciaResponse = new ReferenciaResponse();
-  img :string = "https://images.squarespace-cdn.com/content/v1/553918f7e4b02b8e3a3aa460/1469714663527-M00Q4SME2WMV33CH6NKG/ke17ZwdGBToddI8pDm48kKa3wIE0oEbLgtyTrl2GNlpZw-zPPgdn4jUwVcJE1ZvWEtT5uBSRWt4vQZAgTJucoTqqXjS3CfNDSuuf31e0tVGGPFFSaPlWlH3aUqVLCpfnGwJHc3-XTFtwYvazHwH4rBur-lC0WofN0YB1wFg-ZW0/logopsenuevo.png";
   personaPago: DatosPersona =new DatosPersona();
   volante: VolantePago = new VolantePago();
   tipoDocs : Array<TipoDocumento> = new Array<TipoDocumento>();
@@ -60,7 +59,7 @@ export class InformacionPagoComponent implements OnInit {
     console.log(this.urlRequest)
     this.VolantesInyectados.consultarUrlPse(this.urlRequest).subscribe((urlResponse) =>{
       if(urlResponse.body.codigo !="-1"){
-        //window.location.href = urlResponse.body.url;
+        window.open(urlResponse.body.url, "_blank");
       }else{
         window.alert("Se ha producido un error en el servicio de pago, por favor intentelo de nuevo o contacte al administrador.");
       }

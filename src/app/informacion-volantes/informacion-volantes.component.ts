@@ -3,7 +3,7 @@ import { PersonaMulta } from '../models/PersonaMulta';
 import { VolanteDepagoService } from '../services/volanteDePago/volante-depago.service';
 import { Cartera } from '../models/Cartera';
 import { TokenResponse } from '../models/token/TokenResponse';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ReferenciaRequest } from '../models/referenciaPSE/referenciaRequest';
 import { ReferenciaResponse } from '../models/referenciaPSE/referenciaResponse';
 import { DetalleCartera } from '../models/DetalleCartera';
@@ -34,13 +34,16 @@ export class InformacionVolantesComponent implements OnInit {
   token : TokenResponse = new TokenResponse();
   personaMulta: PersonaMulta =  new PersonaMulta();
   cartera : Cartera = new Cartera();
-  tipoDocumento: String[] = ["Cédula de Ciudadanía","Cédula de extranjería","Registro único tributario"]
   formularioInfoVolantes : FormGroup;
   datosVolante : datosVolante;
+  carteraConsultada : boolean = false;
 
-  constructor(private VolantesInyectados: VolanteDepagoService, private ruta : Router, private fb: FormBuilder) { }
+  constructor(private VolantesInyectados: VolanteDepagoService, private ruta : Router, private fb: FormBuilder, private rutaParams : ActivatedRoute) { 
+    
+  }
   
   ngOnInit(): void {
+    this.ajustarEstilos(this.rutaParams.snapshot.params.organismo as string);
     this.llenarCatalogo();
     this.consultarTipoDePago();
     this.crearFormulario();
@@ -53,6 +56,20 @@ export class InformacionVolantesComponent implements OnInit {
     })
   }
 
+  ajustarEstilos(organismo : string){
+    if(organismo.toUpperCase() == 'CHIA'){
+      document.documentElement.style.setProperty('--organismo-transito','#4CAF50');
+      document.documentElement.style.setProperty('--label-color','#016ca0');
+      document.documentElement.style.setProperty('--border-button-color','#4CAF50');
+      document.documentElement.style.setProperty('--boders-color','#016ca0');
+    }else{
+      document.documentElement.style.setProperty('--organismo-transito','lightblue');
+      document.documentElement.style.setProperty('--label-color','lightblue');
+      document.documentElement.style.setProperty('--border-button-color','lightblue');
+      document.documentElement.style.setProperty('--boders-color','lightblue');
+    }
+  }
+
   consultarCartera(){
     this.datosVolante = this.formularioInfoVolantes.value as datosVolante;
     this.docSelected = this.datosVolante.txtDocumento;
@@ -63,6 +80,7 @@ export class InformacionVolantesComponent implements OnInit {
       this.token.error = tokenService.error;
       this.VolantesInyectados.consultarCartera(this.docSelected,this.personaMulta.numeroIdentificacion, this.token).subscribe((carteraService)=>{
         this.cartera = carteraService; 
+        this.carteraConsultada = true;
       });
     });
   }

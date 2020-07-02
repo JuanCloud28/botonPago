@@ -1,9 +1,9 @@
 <div class="container">
-    <div class="card border-primary col">
+    <div class="card border-primary col" style="padding-top: 12%;">
         <div class="card-header">Consulta si tienes comparendos</div>
-        <div class="card-body text-primary row justify-content-center">
-            <form [formGroup]="formularioInfoVolantes" class="row">
-                <div class="form-group row-3">
+        <div class="card-body text-primary row-md-12">
+            <form [formGroup]="formularioInfoVolantes" class="row justify-content-center">
+                <div class="form-group row-4">
                     <div class="col">
                         <label>Tipo de identificación: </label>
                     </div>
@@ -14,13 +14,13 @@
                             </option>
                         </select>
                     </div>
-                    <div *ngIf="formularioInfoVolantes.controls['selectOneMenuDocumento'].invalid" class="col" style="padding-top: 20px;">
+                    <div *ngIf="formularioInfoVolantes.controls['selectOneMenuDocumento'].invalid && formularioInfoVolantes.controls['selectOneMenuDocumento'].dirty" class="col" style="padding-top: 20px;">
                         <span class="alert alert-danger" role="alert">
                             Por favor seleccione una opción
                         </span>
                     </div>
                 </div>
-                <div class="form-group row-3">
+                <div class="form-group row-4">
                     <div class="col">
                         <label>Número de identificación: </label>
                     </div>
@@ -33,14 +33,14 @@
                         </span>
                     </div>
                 </div>
-                <div class="form-group row-3" style="padding-left: 10%; padding-top: 5%;">
-                    <button (click)="consultarCartera()" class="btn btn-primary" [disabled] = "!formularioInfoVolantes.valid"
+                <div class="form-group row-4" >
+                    <button (click)="consultarCartera()" class="button button1 btn-lg" [disabled] = "!formularioInfoVolantes.valid"
                         >Buscar</button>
                 </div>
             </form>
         </div>
     </div>
-    <div class="card border-primary col">
+    <div *ngIf="carteraConsultada" class="card border-primary col">
         <div class="card-header">Datos Persona</div>
         <div class="card-body text-primary">
             <div class="row-12">
@@ -98,7 +98,7 @@
             </div>
         </div>
     </div>
-    <div style="overflow-x:auto;">
+    <div *ngIf="carteraConsultada"  style="overflow-x:auto;">
         <table class="table  table-striped ">
             <thead>
                 <tr>
