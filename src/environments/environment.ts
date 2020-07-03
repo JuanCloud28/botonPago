@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  urlApiTest: 'https://5b0f33b2-de79-4486-8482-21251150c4d0.mock.pstmn.io/'
+  urlApiTest: 'http://192.168.36.30:8000/PortalPagoAPI/ServiciosRest/'
 };
 
 /*

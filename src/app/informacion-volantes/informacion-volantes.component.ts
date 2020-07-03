@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { PersonaMulta } from '../models/PersonaMulta';
 import { VolanteDepagoService } from '../services/volanteDePago/volante-depago.service';
-import { Cartera } from '../models/Cartera';
+import { Cartera } from '../models/cartera/Cartera';
 import { TokenResponse } from '../models/token/TokenResponse';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ReferenciaRequest } from '../models/referenciaPSE/referenciaRequest';
 import { ReferenciaResponse } from '../models/referenciaPSE/referenciaResponse';
-import { DetalleCartera } from '../models/DetalleCartera';
+import { DetalleCartera } from '../models/cartera/DetalleCartera';
 import { VolantePago } from '../models/VolantePago';
 import { TipoDocumento } from '../models/catalogo/TipoDocumento';
 import { throwError } from 'rxjs';
@@ -14,6 +14,8 @@ import { tipoPagoEnum } from '../models/enums/tipoPagoEnum';
 import { TipoPagoPSE } from '../models/TipoDePago/TipoPagoPSE';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { datosVolante } from '../models/formControl/datosVolante';
+import { CarteraRequest } from '../models/cartera/CarteraRequest';
+import { organismoTransitoConst } from '../models/consts/organismoTransitoConst';
 
 @Component({
   selector: 'app-informacion-volantes',
@@ -37,6 +39,7 @@ export class InformacionVolantesComponent implements OnInit {
   formularioInfoVolantes : FormGroup;
   datosVolante : datosVolante;
   carteraConsultada : boolean = false;
+  carteraRequest : CarteraRequest = new CarteraRequest();
 
   constructor(private VolantesInyectados: VolanteDepagoService, private ruta : Router, private fb: FormBuilder, private rutaParams : ActivatedRoute) { 
     
@@ -57,7 +60,9 @@ export class InformacionVolantesComponent implements OnInit {
   }
 
   ajustarEstilos(organismo : string){
-    if(organismo.toUpperCase() == 'CHIA'){
+    if(organismo.toUpperCase() == organismoTransitoConst.CHIA.nombre){
+      this.carteraRequest.codigoOrganismo = organismoTransitoConst.CHIA.codigo; 
+      console.log(this.carteraRequest);
       document.documentElement.style.setProperty('--organismo-transito','#4CAF50');
       document.documentElement.style.setProperty('--label-color','#016ca0');
       document.documentElement.style.setProperty('--border-button-color','#4CAF50');
@@ -72,17 +77,23 @@ export class InformacionVolantesComponent implements OnInit {
 
   consultarCartera(){
     this.datosVolante = this.formularioInfoVolantes.value as datosVolante;
-    this.docSelected = this.datosVolante.txtDocumento;
-    this.personaMulta.numeroIdentificacion = this.datosVolante.txtDocumento;
-    console.log(this.datosVolante)
-    this.VolantesInyectados.traerToken().subscribe((tokenService)=>{
-      this.token.mensaje = tokenService.mensaje;
-      this.token.error = tokenService.error;
-      this.VolantesInyectados.consultarCartera(this.docSelected,this.personaMulta.numeroIdentificacion, this.token).subscribe((carteraService)=>{
+    this.carteraRequest.numeroIdentificacion = this.datosVolante.txtDocumento;
+    this.carteraRequest.codigoTipoIdentificacion = this.datosVolante.selectOneMenuDocumento;
+    console.log(this.carteraRequest)
+    this.VolantesInyectados.consultarCartera(this.carteraRequest).subscribe((carteraService)=>{
         this.cartera = carteraService; 
-        this.carteraConsultada = true;
-      });
+        //console.log(this.cartera);
+        if(this.cartera.codigo == '000'){
+          this.carteraConsultada = true;
+        }else{
+          console.error(`Código de error: ${this.cartera.codigo}
+          Detalle:${this.cartera.descripcion}`);          
+          return throwError(`Código de error: ${this.cartera.codigo}
+                              Detalle:${this.cartera.descripcion}`);
+        }
+        
     });
+
   }
 
   traerReferenciaPSE(detalleCartera : DetalleCartera){

@@ -3,7 +3,6 @@ import { PersonaMulta } from 'src/app/models/PersonaMulta';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { VolantePagoRequest } from 'src/app/models/VolantePagoRequest';
-import { Cartera } from 'src/app/models/Cartera';
 import { TokenResponse } from 'src/app/models/token/TokenResponse';
 import { LoginToken } from 'src/app/models/token/LoginToken';
 import { ReferenciaResponse } from 'src/app/models/referenciaPSE/referenciaResponse';
@@ -14,6 +13,8 @@ import { UrlPseRequest } from 'src/app/models/urlPSe/UrlPseRequest';
 import { UrlPseResponse } from 'src/app/models/urlPSe/UrlPseResponse';
 import { TipoPagoPSE } from 'src/app/models/TipoDePago/TipoPagoPSE';
 import { environment } from './../../../environments/environment'
+import { Cartera } from 'src/app/models/cartera/Cartera';
+import { CarteraRequest } from 'src/app/models/cartera/CarteraRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -29,10 +30,8 @@ export class VolanteDepagoService {
     return this.http.post<PersonaMulta>('https://volantespago.free.beeceptor.com/volantePago', this.volantePagoRequest).pipe(catchError(this.handleError));
   }
 
-  consultarCartera(tipoDoc :string , numeroDoc: string, token: TokenResponse): Observable<Cartera> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token.mensaje});
-    //return this.http.get<Cartera>('http://192.168.44.22:8091/Comparendo/getComparendosPorDocumento/'+tipoDoc+'/' + numeroDoc, { headers: headers })
-    return this.http.get<Cartera>( environment.urlApiTest + 'getComparendosPorDocumento/'+tipoDoc+'/' + numeroDoc).pipe(catchError(this.handleError));
+  consultarCartera(carteraRequest :CarteraRequest): Observable<Cartera> {
+    return this.http.post<Cartera>( environment.urlApiTest + 'consultaObligaciones',carteraRequest ).pipe(catchError(this.handleError));
   }
 
   traerToken(): Observable<TokenResponse> {
