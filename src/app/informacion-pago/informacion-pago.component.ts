@@ -7,6 +7,7 @@ import { TipoDocumento } from '../models/catalogo/TipoDocumento';
 import { VolanteDepagoService } from '../services/volanteDePago/volante-depago.service';
 import { UrlPseRequest } from '../models/urlPSe/UrlPseRequest';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-informacion-pago',
@@ -35,12 +36,12 @@ export class InformacionPagoComponent implements OnInit {
 
   crearFormulario(){
     this.formularioInfoPago = this.fb.group({
-      tipoDocumento : [Validators.required],
-      nombre : ['', Validators.required],
-      telefono : ['', Validators.required],
-      numeroDocumento : ['', Validators.required],
-      apellido : ['', Validators.required],
-      correoElectronico : ['', Validators.compose([
+      tipoIdentificacion : [Validators.required],
+      nombreCliente : ['', Validators.required],
+      telefonoClente : ['', Validators.required],
+      numeroIdentificacion : ['', Validators.required],
+      apellidoCliente : ['', Validators.required],
+      emailCliente : ['', Validators.compose([
         Validators.required, Validators.email
       ])]
 
@@ -56,11 +57,23 @@ export class InformacionPagoComponent implements OnInit {
 
   redireccionarPSE(){
     this.urlRequest =  this.formularioInfoPago.value as UrlPseRequest
-    console.log(this.urlRequest)
+    this.urlRequest.codigoOrganismo = this.volante.codigoOrganismo;
+    this.urlRequest.valorIva = this.volante.valorIntereses;
+    this.urlRequest.totalConIva = this.volante.valorTotal;
+    this.urlRequest.inscripcionPersona = "0";
+    this.urlRequest.consecutivoLiquidacion = this.volante.referencia;
+    this.urlRequest.descripcionPago = this.volante.descripcion;
+    this.urlRequest.idTipoPagoPse = this.volante.tipoPago;
+    this.urlRequest.liquidacionRetefuente = "0";
+    
     this.VolantesInyectados.consultarUrlPse(this.urlRequest).subscribe((urlResponse) =>{
+      console.log(this.urlRequest);
+      console.log(urlResponse);
       if(urlResponse.body.codigo !="-1"){
         window.open(urlResponse.body.url, "_blank");
       }else{
+        console.error(`Codigo: ${urlResponse.codigoRespuesta} Descripción: ${urlResponse.descripcion}`)
+        throwError(`Codigo: ${urlResponse.codigoRespuesta} Descripción: ${urlResponse.descripcion}`);
         window.alert("Se ha producido un error en el servicio de pago, por favor intentelo de nuevo o contacte al administrador.");
       }
     });

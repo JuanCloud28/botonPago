@@ -12,5 +12,4 @@ export class ReferenciaRequest
     "valorTotal" : string;
     "valorIntereses" : string;
     "valorDescuentoCapital" : string;  
-    "IdTipoPago" : string;
 }

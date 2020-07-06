@@ -42,7 +42,7 @@ export class VolanteDepagoService {
 
   traerReferenciaPSE(referenciaRequest :ReferenciaRequest) : Observable<ReferenciaResponse>
   {
-    return this.http.post<ReferenciaResponse>( environment.urlApiTest +'referenciaPSE',referenciaRequest).pipe(catchError(this.handleError));
+    return this.http.post<ReferenciaResponse>( environment.urlApiTest +'generarVolantePago',referenciaRequest).pipe(catchError(this.handleError));
   }
 
   consultarCatalogoTipoDoc() : Observable<TipoDocumento[]>
@@ -51,7 +51,7 @@ export class VolanteDepagoService {
   }
 
   consultarUrlPse (urlPseRequest :UrlPseRequest) :Observable<UrlPseResponse>{
-    return this.http.post<UrlPseResponse>(environment.urlApiTest + 'urlPSE',urlPseRequest ).pipe(catchError(this.handleError));
+    return this.http.post<UrlPseResponse>(environment.urlApiTest + 'iniciarPago',urlPseRequest ).pipe(catchError(this.handleError));
   }
 
   consultarTiposDePago() : Observable<TipoPagoPSE[]>

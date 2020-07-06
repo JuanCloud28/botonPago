@@ -5,6 +5,15 @@ export class VolantePago {
     tipoIdentificacion: string;
     numeroIdentificacion: string;
     nombreDeudor: string;
-    total: string;
+    codigoOrganismo :string;
+    placaVehiculo: string;
+    tipoCartera: string;
+    valorAPagar :string
+    valorTotal: string;
+    valorIntereses :string
+    valorDescuentoCapital : string;
+    nombreOrganismo: string;
+    tipoPago: string;
+    descripcion: string;
 }
 
