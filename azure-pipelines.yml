@@ -1,4 +1,11 @@
 # Node.js with Angular
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Free Trial(3e857dfd-2588-4a62-a02f-88262bddf2a7)'
+    appType: 'webApp'
+    WebAppName: 'PortalPagosTest'
+    packageForLinux: 'dist/botonpago'
 # Build a Node.js project that uses Angular.
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
