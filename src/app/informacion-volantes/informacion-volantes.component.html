@@ -1,44 +1,52 @@
-<div class="container">
-    <div class="card border-primary col" style="padding-top: 12%;">
-        <div class="card-header">Consulta si tienes comparendos</div>
-        <div class="card-body text-primary row-md-12">
-            <form [formGroup]="formularioInfoVolantes" class="row justify-content-center">
-                <div class="form-group row-4">
-                    <div class="col">
-                        <label>Tipo de identificación: </label>
+<div class="container" style="padding-top: 12%;">
+    <div class="card border-primary col">
+        <form [formGroup]="formularioInfoVolantes">
+            <div class="card-header">Consulta si tienes comparendos</div>
+            <div class="card-body text-primary row-md-12">
+                <div class="row justify-content-center">
+                    <div class="form-group row-4">
+                        <div class="col">
+                            <label>Tipo de identificación: </label>
+                        </div>
+                        <div class="col">
+                            <select class="form-control-sm" name="selectOneMenuDocumento"
+                                formControlName="selectOneMenuDocumento">
+                                <option>Seleccionar</option>
+                                <option *ngFor="let doc of tipoDocs" value="{{doc.codigTipoIdentificacion}}">
+                                    {{doc.nombreTipoIdentificacion}}
+                                </option>
+                            </select>
+                        </div>
+                        <div *ngIf="formularioInfoVolantes.controls['selectOneMenuDocumento'].invalid && formularioInfoVolantes.controls['selectOneMenuDocumento'].dirty"
+                            class="col" style="padding-top: 20px;">
+                            <span class="alert alert-danger" role="alert">
+                                Por favor seleccione una opción
+                            </span>
+                        </div>
                     </div>
-                    <div class="col"> 
-                        <select class="form-control"  name="selectOneMenuDocumento" formControlName="selectOneMenuDocumento">
-                            <option>Seleccionar</option>
-                            <option *ngFor="let doc of tipoDocs" value="{{doc.codigTipoIdentificacion}}">{{doc.nombreTipoIdentificacion}}
-                            </option>
-                        </select>
-                    </div>
-                    <div *ngIf="formularioInfoVolantes.controls['selectOneMenuDocumento'].invalid && formularioInfoVolantes.controls['selectOneMenuDocumento'].dirty" class="col" style="padding-top: 20px;">
-                        <span class="alert alert-danger" role="alert">
-                            Por favor seleccione una opción
-                        </span>
+                    <div class="form-group row-4">
+                        <div class="col">
+                            <label>Número de identificación: </label>
+                        </div>
+                        <div class="col">
+                            <input type="text" name="txtDocumento" formControlName="txtDocumento">
+                        </div>
+                        <div *ngIf="formularioInfoVolantes.controls['txtDocumento'].invalid && formularioInfoVolantes.controls['txtDocumento'].dirty"
+                            class="col" style="padding-top: 20px;">
+                            <span class="invalid-feedback" role="alert">
+                                Por favor escriba un documento
+                            </span>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group row-4">
-                    <div class="col">
-                        <label>Número de identificación: </label>
-                    </div>
-                    <div class="col"> 
-                        <input type="text" name="txtDocumento" formControlName="txtDocumento">
-                    </div>
-                    <div *ngIf="formularioInfoVolantes.controls['txtDocumento'].invalid && formularioInfoVolantes.controls['txtDocumento'].dirty"  class="col" style="padding-top: 20px;">
-                        <span class="invalid-feedback" role="alert">
-                            Por favor escriba un documento
-                        </span>
-                    </div>
+            </div>
+            <div class="card-footer text-muted">
+                <div class="form-group row" style="display: flex; justify-content: center; align-items: center;">
+                    <button (click)="consultarCartera()" class="button button1 btn-lg align-self-end"
+                        [disabled]="!formularioInfoVolantes.valid">Buscar</button>
                 </div>
-                <div class="form-group row-4" >
-                    <button (click)="consultarCartera()" class="button button1 btn-lg" [disabled] = "!formularioInfoVolantes.valid"
-                        >Buscar</button>
-                </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
     <div *ngIf="carteraConsultada" class="card border-primary col">
         <div class="card-header">Datos Persona</div>
@@ -98,7 +106,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="carteraConsultada"  style="overflow-x:auto;">
+    <div *ngIf="carteraConsultada" style="overflow-x:auto;">
         <table class="table  table-striped ">
             <thead>
                 <tr>

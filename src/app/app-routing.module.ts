@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { InformacionVolantesComponent } from './informacion-volantes/informacion-volantes.component';
 import { InformacionPagoComponent } from './informacion-pago/informacion-pago.component';
+import { EstadoPagoComponent } from './estado-pago/estado-pago.component';
 
 
 const routes: Routes = [
@@ -14,6 +15,9 @@ const routes: Routes = [
   },
   {
     path: 'infoPago', component: InformacionPagoComponent
+  },
+  {
+    path: 'estadoPago', component: EstadoPagoComponent
   },
   {
     path: '', component: InformacionVolantesComponent

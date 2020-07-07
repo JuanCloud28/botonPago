@@ -21,6 +21,7 @@ export class DetalleCartera{
     "url_volante_pago": string;
     "total_con_descuento_decreto678": string;
     "porcentaje_descuento": string;
+    "tipo_cartera_numero": string;
     "valorDelDescuento": string;
     "descripcion_infraccion": string;
     "valor_infraccion": string;

@@ -8,12 +8,14 @@ import { InformacionVolantesComponent } from './informacion-volantes/informacion
 import { HttpClientModule} from '@angular/common/http'
 import { VolanteDepagoService } from './services/volanteDePago/volante-depago.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { EstadoPagoComponent } from './estado-pago/estado-pago.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     InformacionPagoComponent,
-    InformacionVolantesComponent
+    InformacionVolantesComponent,
+    EstadoPagoComponent
   ],
   imports: [
     BrowserModule,

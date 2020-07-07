@@ -99,28 +99,44 @@ export class InformacionVolantesComponent implements OnInit {
   traerReferenciaPSE(detalleCartera : DetalleCartera){
     this.referenciaReq.codigoOrganismo = detalleCartera.codigo_organismo_transito;
     this.referenciaReq.nombreOrganismo = detalleCartera.nombre_organismo_transito;
-    this.referenciaReq.tipoDocumento = this.cartera.resumen_cartera.codigo_tipo_documento;
+    this.referenciaReq.tipoDocumento = this.datosVolante.selectOneMenuDocumento;
     this.referenciaReq.numeroDocumento = this.cartera.resumen_cartera.numero_documento;
     this.referenciaReq.nombreInfractor = this.concatenarNombre();
     this.referenciaReq.placaVehiculo = detalleCartera.placa_vehiculo;
     this.referenciaReq.numeroComparendo = detalleCartera.numero_comparendo;
-    this.referenciaReq.tipoCartera = detalleCartera.tipo_cartera;
+    this.referenciaReq.tipoCartera = detalleCartera.tipo_cartera_numero;
     this.referenciaReq.valorAPagar = detalleCartera.saldo_pagar;
     this.referenciaReq.valorTotal = detalleCartera.total_pagar;
     this.referenciaReq.valorIntereses = detalleCartera.valor_intereses;
-    this.referenciaReq.valorDescuentoCapital = detalleCartera.valorDelDescuento;
+    this.referenciaReq.valorDescuentoCapital = detalleCartera.valorDelDescuento == undefined ? "0": detalleCartera.valorDelDescuento;
 
     this.volante.nombreDeudor = this.concatenarNombre();
     this.volante.numeroComparendo = detalleCartera.numero_comparendo;
     this.volante.numeroIdentificacion = this.cartera.resumen_cartera.numero_documento;
     this.volante.razonSocial = detalleCartera.nombre_organismo_transito;
     this.volante.tipoIdentificacion = this.cartera.resumen_cartera.nombre_tipo_documento;
-    this.volante.total = detalleCartera.total_pagar;
+    this.volante.valorTotal = detalleCartera.total_pagar;
+    this.volante.codigoOrganismo = detalleCartera.codigo_organismo_transito;
+    this.volante.nombreOrganismo = detalleCartera.nombre_organismo_transito;
+    this.volante.placaVehiculo = detalleCartera.placa_vehiculo;
+    this.volante.tipoCartera = detalleCartera.tipo_cartera_numero;
+    this.volante.valorAPagar =  detalleCartera.saldo_pagar;
+    this.volante.valorDescuentoCapital = detalleCartera.valorDelDescuento;
+    this.volante.valorIntereses = detalleCartera.valor_intereses;
+    this.volante.descripcion =  detalleCartera.tipo_cartera;
 
     this.VolantesInyectados.traerReferenciaPSE(this.referenciaReq).subscribe((serviceResponse)=>{
-      this.referenciaResp = serviceResponse;
-      this.volante.referencia = serviceResponse.consecutivoPagoPse;
-      this.ruta.navigate(['infoPago', {infoPago : JSON.stringify(this.volante)}])
+      console.log(this.referenciaReq);
+      if (serviceResponse.codigoRespuesta == "000"){
+        this.referenciaResp = serviceResponse;
+        this.volante.referencia = serviceResponse.consecutivoPagoPse;
+        console.log(serviceResponse);
+        this.ruta.navigate(['infoPago', {infoPago : JSON.stringify(this.volante)}])
+      }else{
+        window.alert("Se ha presentado un error, por favor intente más tarde o consulte con el administrador.");
+        console.error(`Codigo: ${serviceResponse.codigoRespuesta} Descripción: ${serviceResponse.descripcion}`)
+        throwError(`Codigo: ${serviceResponse.codigoRespuesta} Descripción: ${serviceResponse.descripcion}`);
+      }
     });
   }
 
@@ -146,7 +162,7 @@ export class InformacionVolantesComponent implements OnInit {
       if(this.tiposDePago.length > 0){
         for(let tipoPago of this.tiposDePago){
           if(tipoPago.descripcion == tipoPagoEnum.PAGO_COMPARENDO){
-            this.referenciaReq.IdTipoPago = tipoPago.idTipoPagoPse;
+            this.volante.tipoPago  = tipoPago.idTipoPagoPse;
           }
         }
       }else{
