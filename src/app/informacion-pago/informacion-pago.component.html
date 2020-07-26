@@ -1,6 +1,10 @@
 <div class="container" style="padding-top: 12%;">
     <div class="card border-primary col">
-        <div class="card-header">Información Comparendo</div>
+        <div class="card-header">
+            <h3>
+                Información Comparendo
+            </h3>
+        </div>
         <div class="card-body text-primary">
             <div class="form-group row">
                 <div class="col">
@@ -60,15 +64,19 @@
             </div>
         </div>
     </div>
-    <div class="card border-primary col">
-        <div class="card-header">Por favor ingrese los datos de la persona que realizará el pago</div>
+    <div class="card border-primary col" style="padding-top: 1%;">
+        <div class="card-header">
+            <h3>
+                Por favor ingrese los datos de la persona que realizará el pago
+            </h3>
+        </div>
         <div class="card-body text-primary">
             <form [formGroup]="formularioInfoPago">
                 <div class="form-group col-md-9">
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label>Tipo Documento</label>
-                            <select class="form-control" name="tipoDocumento" formControlName="tipoIdentificacion">
+                            <label class="required">Tipo Documento</label>
+                            <select class="form-control" name="tipoDocumento" formControlName="tipoIdentificacion" (change)="agregarValidacipon()">
                                 <option>Seleccionar</option>
                                 <option *ngFor="let doc of tipoDocs" value="{{doc.codigTipoIdentificacion}}">
                                     {{doc.nombreTipoIdentificacion}}
@@ -84,38 +92,12 @@
                             </div>
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Nombre</label>
-                            <input type="text" class="form-control" name="nombre" formControlName="nombreCliente">
-                            <div *ngIf="formularioInfoPago.controls['nombreCliente'].invalid && formularioInfoPago.controls['nombreCliente'].dirty"
-                                class="col" style="padding-top: 20px;">
-                                <small>
-                                    <span class="alert alert-danger" role="alert">
-                                        Por favor llenar campo
-                                    </span>
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label>Teléfono</label>
-                            <input type="text" class="form-control" name="telefono" formControlName="telefonoClente">
-                            <div *ngIf="formularioInfoPago.controls['telefonoClente'].invalid && formularioInfoPago.controls['telefonoClente'].dirty"
-                                class="col" style="padding-top: 20px;">
-                                <small>
-                                    <span class="alert alert-danger" role="alert">
-                                        Por favor llenar campo
-                                    </span>
-                                </small>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label>Número Documento</label>
+                            <label class="required" >Número Documento</label>
                             <input type="text" class="form-control" name="numeroDocumento"
                                 formControlName="numeroIdentificacion">
                             <div *ngIf="formularioInfoPago.controls['numeroIdentificacion'].invalid && formularioInfoPago.controls['numeroIdentificacion'].dirty"
                                 class="col" style="padding-top: 20px;">
-                                <small>
+                                <small *ngIf="formularioInfoPago.controls['numeroIdentificacion'].errors.required">
                                     <span class="alert alert-danger" role="alert">
                                         Por favor llenar campo
                                     </span>
@@ -125,26 +107,97 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label>Apellido</label>
-                            <input type="text" class="form-control" name="apellido" formControlName="apellidoCliente">
-                            <div *ngIf="formularioInfoPago.controls['apellidoCliente'].invalid && formularioInfoPago.controls['apellidoCliente'].dirty"
+                            <label class="required">Nombre</label>
+                            <input type="text" class="form-control" name="nombre" formControlName="nombreCliente">
+                            <div *ngIf="formularioInfoPago.controls['nombreCliente'].invalid && formularioInfoPago.controls['nombreCliente'].dirty"
                                 class="col" style="padding-top: 20px;">
-                                <small>
+                                <small *ngIf="formularioInfoPago.controls['nombreCliente'].errors.required">
                                     <span class="alert alert-danger" role="alert">
                                         Por favor llenar campo
+                                    </span>
+                                </small>
+                                <small *ngIf="formularioInfoPago.controls['nombreCliente'].errors.minlength">
+                                    <span class="alert alert-danger" role="alert">
+                                        El mínimo de carácteres permitidos es 3
+                                    </span>
+                                </small>
+                                <small *ngIf="formularioInfoPago.controls['nombreCliente'].errors.maxlength">
+                                    <span class="alert alert-danger" role="alert">
+                                        El máximo de carácteres permitidos es 30
                                     </span>
                                 </small>
                             </div>
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Correo electrónico</label>
+                            <label  [ngClass]="{ 'required' : apellidoRequired }">Apellido</label>
+                            <input type="text" class="form-control" name="apellido" formControlName="apellidoCliente">
+                            <div *ngIf="formularioInfoPago.controls['apellidoCliente'].invalid && formularioInfoPago.controls['apellidoCliente'].dirty"
+                                class="col" style="padding-top: 20px;">
+                                <small *ngIf="formularioInfoPago.controls['apellidoCliente'].errors.required">
+                                    <span class="alert alert-danger" role="alert">
+                                        Por favor llenar campo
+                                    </span>
+                                </small>
+                                <small *ngIf="formularioInfoPago.controls['apellidoCliente'].errors.minlength">
+                                    <span class="alert alert-danger" role="alert">
+                                        El mínimo de carácteres permitidos es 3
+                                    </span>
+                                </small>
+                                <small *ngIf="formularioInfoPago.controls['apellidoCliente'].errors.maxlength">
+                                    <span class="alert alert-danger" role="alert">
+                                        El máximo de carácteres permitidos es 30
+                                    </span>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label class="required" >Correo electrónico</label>
                             <input type="text" class="form-control" name="txtCorreoElectronico"
                                 placeholder="correo@ejemplo.com" formControlName="emailCliente">
                             <div *ngIf="formularioInfoPago.controls['emailCliente'].invalid && formularioInfoPago.controls['emailCliente'].dirty"
                                 class="col" style="padding-top: 20px;">
-                                <small>
+                                <small *ngIf="formularioInfoPago.controls['emailCliente'].errors.required">
                                     <span class="alert alert-danger" role="alert">
-                                        Por favor escriba un Email valido
+                                        Por favor llenar campo
+                                    </span>
+                                </small>
+                                <small *ngIf="formularioInfoPago.controls['emailCliente'].errors.minlength">
+                                    <span class="alert alert-danger" role="alert">
+                                        El mínimo de carácteres permitidos es 11
+                                    </span>
+                                </small>
+                                <small *ngIf="formularioInfoPago.controls['emailCliente'].errors.maxlength && !formularioInfoPago.controls['emailCliente'].errors.email">
+                                    <span class="alert alert-danger" role="alert">
+                                        El máximo de carácteres permitidos es 50
+                                    </span>
+                                </small>
+                                <small *ngIf="formularioInfoPago.controls['emailCliente'].errors.email && !formularioInfoPago.controls['emailCliente'].errors.minlength">
+                                    <span class="alert alert-danger" role="alert">
+                                        Se necesita el carácter '@' para ser valido
+                                    </span>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="required">Teléfono</label>
+                            <input type="text" class="form-control" name="telefono" formControlName="telefonoClente">
+                            <div *ngIf="formularioInfoPago.controls['telefonoClente'].invalid && formularioInfoPago.controls['telefonoClente'].dirty"
+                                class="col" style="padding-top: 20px;">
+                                <small *ngIf="formularioInfoPago.controls['telefonoClente'].errors.required">
+                                    <span class="alert alert-danger" role="alert">
+                                        Por favor llenar campo
+                                    </span>
+                                </small>
+                                <small *ngIf="formularioInfoPago.controls['telefonoClente'].errors.minlength">
+                                    <span class="alert alert-danger" role="alert">
+                                        El mínimo de carácteres permitidos es 7
+                                    </span>
+                                </small>
+                                <small *ngIf="formularioInfoPago.controls['telefonoClente'].errors.maxlength">
+                                    <span class="alert alert-danger" role="alert">
+                                        El máximo de carácteres permitidos es 10
                                     </span>
                                 </small>
                             </div>
@@ -160,11 +213,11 @@
                         </div>
                     </div>
                 </div>
-
-
-
             </form>
-
+        </div>
+        <div class="card-footer text-muted">
+            <ngb-alert *ngIf="!staticAlertClosed" type="danger" (close)="staticAlertClosed = true" autofocus>{{error}}
+            </ngb-alert>
         </div>
     </div>
 </div>

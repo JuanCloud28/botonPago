@@ -5,49 +5,49 @@
             <div class="form-group row">
                 <label for="inputEmail3" class="col-sm-3 col-form-label">REFERENCIA DE PAGO: </label>
                 <div class="col-sm-9">
-                    <label class="form-control">{{estadoPago.referenciaPago}}</label>
+                    <label class="form-control">{{datosPago.referenciaPago}}</label>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="inputEmail3" class="col-sm-3 col-form-label">RAZÓN SOCIAL: </label>
                 <div class="col-sm-9">
-                    <label class="form-control">{{estadoPago.razonSocial | uppercase}}</label>
+                    <label class="form-control">{{estadoPagoRes.nombreOrganismo | uppercase}}</label>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="inputEmail3" class="col-sm-3 col-form-label">NÚMERO DE COMPARENDO: </label>
                 <div class="col-sm-9">
-                    <label class="form-control">{{estadoPago.numeroComparendo}}</label>
+                    <label class="form-control">{{estadoPagoRes.numeroComparendo}}</label>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="inputEmail3" class="col-sm-3 col-form-label">TIPO DE IDENTIFICACIÓN: </label>
                 <div class="col-sm-9">
-                    <label class="form-control">{{estadoPago.tipoIdentificacion | uppercase}}</label>
+                    <label class="form-control">{{estadoPagoRes.tipoDocumento | uppercase}}</label>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="inputEmail3" class="col-sm-3 col-form-label">NÚMERO DE IDENTIFICACIÓN: </label>
                 <div class="col-sm-9">
-                    <label class="form-control">{{estadoPago.numeroIdentificacion}}</label>
+                    <label class="form-control">{{estadoPagoRes.numeroDocumento}}</label>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="inputEmail3" class="col-sm-3 col-form-label">NOMBRE DEL DEUDOR: </label>
                 <div class="col-sm-9">
-                    <label class="form-control">{{estadoPago.nombreDeudor | uppercase}}</label>
+                    <label class="form-control">{{estadoPagoRes.nombreDeudor | uppercase}}</label>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="inputEmail3" class="col-sm-3 col-form-label">ESTADO: </label>
                 <div class="col-sm-9">
-                    <label class="form-control">{{estadoPago.estado | uppercase}}</label>
+                    <label class="form-control">{{estadoPagoRes.descripcionEstadoPago | uppercase}}</label>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="inputEmail3" class="col-sm-3 col-form-label">VALOR: </label>
                 <div class="col-sm-9">
-                    <label class="form-control">{{estadoPago.valor | currency }}</label>
+                    <label class="form-control">{{estadoPagoRes.valorPago | currency }}</label>
                 </div>
             </div>
         </div>

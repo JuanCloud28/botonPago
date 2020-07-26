@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { InformacionVolantesComponent } from './informacion-volantes/informacion-volantes.component';
 import { InformacionPagoComponent } from './informacion-pago/informacion-pago.component';
 import { EstadoPagoComponent } from './estado-pago/estado-pago.component';
+import { AccessDeniedComponent } from './access-denied/access-denied.component';
 
 
 const routes: Routes = [
@@ -21,6 +22,9 @@ const routes: Routes = [
   },
   {
     path: '', component: InformacionVolantesComponent
+  },
+  {
+    path: 'accessDenied', component : AccessDeniedComponent
   }
 
 ];

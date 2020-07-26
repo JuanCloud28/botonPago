@@ -1,15 +1,24 @@
 <div class="container" style="padding-top: 12%;">
+    <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#52b45f" type="timer" [fullScreen]="true">
+        <p style="color: white"> Cargando... </p>
+    </ngx-spinner>
+    <ngb-alert *ngIf="!staticAlertClosed" type="danger" (close)="staticAlertClosed = true">{{error}}</ngb-alert>
     <div class="card border-primary col">
         <form [formGroup]="formularioInfoVolantes">
-            <div class="card-header">Consulta si tienes comparendos</div>
+            <div class="card-header">
+                <h1>
+                    Consulta si tienes comparendos
+                </h1>
+
+            </div>
             <div class="card-body text-primary row-md-12">
                 <div class="row justify-content-center">
-                    <div class="form-group row-4">
+                    <div class="form-group col-sm-12 col-md">
                         <div class="col">
-                            <label>Tipo de identificación: </label>
+                            <label class="required">Tipo de identificación: </label>
                         </div>
                         <div class="col">
-                            <select class="form-control-sm" name="selectOneMenuDocumento"
+                            <select class="form-control" name="selectOneMenuDocumento"
                                 formControlName="selectOneMenuDocumento">
                                 <option>Seleccionar</option>
                                 <option *ngFor="let doc of tipoDocs" value="{{doc.codigTipoIdentificacion}}">
@@ -24,12 +33,12 @@
                             </span>
                         </div>
                     </div>
-                    <div class="form-group row-4">
+                    <div class="form-group col-sm-12 col-md">
                         <div class="col">
-                            <label>Número de identificación: </label>
+                            <label class="required">Número de identificación: </label>
                         </div>
                         <div class="col">
-                            <input type="text" name="txtDocumento" formControlName="txtDocumento">
+                            <input type="text" name="txtDocumento" formControlName="txtDocumento" class="form-control">
                         </div>
                         <div *ngIf="formularioInfoVolantes.controls['txtDocumento'].invalid && formularioInfoVolantes.controls['txtDocumento'].dirty"
                             class="col" style="padding-top: 20px;">
@@ -38,6 +47,9 @@
                             </span>
                         </div>
                     </div>
+                </div>
+                <div class="row justify-content-center">
+                    <re-captcha formControlName="recaptcha"></re-captcha>
                 </div>
             </div>
             <div class="card-footer text-muted">
@@ -51,7 +63,7 @@
     <div *ngIf="carteraConsultada" class="card border-primary col">
         <div class="card-header">Datos Persona</div>
         <div class="card-body text-primary">
-            <div class="row-12">
+            <div *ngIf="carteraConsultada" class="row-12">
                 <div class="row-6">
                     <div class="col-6">
                         <label>Tipo de identificación: </label>
@@ -102,55 +114,383 @@
                         <label style="padding-left: 10px;"> {{cartera.resumen_cartera.total_cartera | currency}}</label>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
-    <div *ngIf="carteraConsultada" style="overflow-x:auto;">
-        <table class="table  table-striped ">
-            <thead>
-                <tr>
-                    <th scope="col">Pagar</th>
-                    <th scope="col">Tipo Cartera</th>
-                    <th scope="col">Número Comparendo</th>
-                    <th scope="col">Fecha Imposición</th>
-                    <th scope="col">Placa Vehículo</th>
-                    <th scope="col">Resolución</th>
-                    <th scope="col">Organismo De Transito</th>
-                    <th scope="col">Infracción</th>
-                    <th scope="col">Agente Impositor</th>
-                    <th scope="col">Valor Multa</th>
-                    <th scope="col">Intereses</th>
-                    <th scope="col">Costos Procesales</th>
-                    <th scope="col">Saldo Pagar</th>
-                    <th scope="col">Total A Pagar</th>
-                    <th scope="col">Valor Descuento</th>
-                    <th scope="col">Comparecencia Virtual</th>
+    <div>
+        <!--Chia-->
+        <div *ngIf="carteraConsultada" style="overflow-x:auto;">
+            <table class="table  table-striped ">
+                <thead>
+                    <tr>
+                        <th scope="col">Pagar</th>
+                        <th scope="col">Tipo Cartera</th>
+                        <th scope="col">Número Comparendo</th>
+                        <th scope="col">Fecha Imposición</th>
+                        <th scope="col">Placa Vehículo</th>
+                        <th scope="col">Resolución</th>
+                        <th scope="col">Organismo De Transito</th>
+                        <th scope="col">Infracción</th>
+                        <th scope="col">Agente Impositor</th>
+                        <th scope="col">Valor Multa</th>
+                        <th scope="col">Intereses</th>
+                        <th scope="col">Costos Procesales</th>
+                        <th scope="col">Saldo Pagar</th>
+                        <th scope="col">Total A Pagar</th>
+                        <th scope="col">Valor con descuento Decreto 678</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let detalle of cartera.detalle_cartera">
+                        <td> <button class="btn btn-primary" (click)="traerReferenciaPSE(detalle)">Pago PSE</button>
+                        </td>
+                        <td>{{ detalle.tipo_cartera }}</td>
+                        <td>{{ detalle.numero_comparendo}}</td>
+                        <td>{{ detalle.fecha_imposicion }}</td>
+                        <td>{{ detalle.placa_vehiculo  }}</td>
+                        <td>{{ detalle.resolucion }}</td>
+                        <td>{{ detalle.nombre_organismo_transito }}</td>
+                        <td>{{ detalle.codigo_infraccion }}</td>
+                        <td>{{ detalle.nombre_agente_impositor }}</td>
+                        <td>{{ detalle.valor_multa | currency}}</td>
+                        <td>{{ detalle.valor_intereses | currency}}</td>
+                        <td>{{ detalle.costas_procesales | currency}}</td>
+                        <td>{{ detalle.saldo_pagar | currency}}</td>
+                        <td>{{ detalle.total_pagar | currency}}</td>
+                        <td>{{ detalle.total_con_descuento_decreto678 | currency}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row-md-12">
+        <!--Cartagena-->
+        <mat-card>
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">RESUMEN DE MULTAS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">EMBARGADO</th>
+                                <td>NO</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">TOTAL MULTA</th>
+                                <td>1232422</td>
+                            </tr>
+                            <tr style="background-color: orange;">
+                                <th scope="row">TOTAL INTERESES</th>
+                                <td>234545345</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">COSTAS PROCESALES</th>
+                                <td>23423423</td>
+                            </tr>
+                            <tr style="background-color: orange;">
+                                <th scope="row">TOTAL DESCUENTO CARTERA</th>
+                                <td>2342342</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">TOTAL DE CARTERA</th>
+                                <td>
+                                    <label style="color: rgb(106, 166, 245);"> 234234</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">CANTIDAD REGISTROS</th>
+                                <td>23423424</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">FECHA CONSULTA</th>
+                                <td>2342342</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <mat-accordion>
+                    <!-- #docregion basic-panel -->
+                    <!-- #docregion hide-toggle -->
+                    <mat-expansion-panel hideToggle>
+                        <!-- #enddocregion hide-toggle -->
+                        <mat-expansion-panel-header>
+                            <mat-panel-description>
+                                Contenido multas
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let detalle of cartera.detalle_cartera">
-                    <td> <button class="btn btn-primary" (click)="traerReferenciaPSE(detalle)">Pago PSE</button> </td>
-                    <td>{{ detalle.tipo_cartera }}</td>
-                    <td>{{ detalle.numero_comparendo}}</td>
-                    <td>{{ detalle.fecha_imposicion }}</td>
-                    <td>{{ detalle.placa_vehiculo  }}</td>
-                    <td>{{ detalle.resolucion }}</td>
-                    <td>{{ detalle.nombre_organismo_transito }}</td>
-                    <td>{{ detalle.codigo_infraccion }}</td>
-                    <td>{{ detalle.nombre_agente_impositor }}</td>
-                    <td>{{ detalle.valor_multa }}</td>
-                    <td>{{ detalle.valor_intereses }}</td>
-                    <td>{{ detalle.costas_procesales }}</td>
-                    <td>{{ detalle.saldo_pagar}}</td>
-                    <td>{{ detalle.total_pagar}}</td>
-                    <td>{{ detalle.valor_con_descuento}}</td>
-                    <td>{{ detalle.descripcion_infraccion}}</td>
+                            <!-- Checkbox Column -->
+                            <ng-container matColumnDef="select">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                                        [checked]="selection.hasValue() && isAllSelected()"
+                                        [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                        [aria-label]="checkboxLabel()">
+                                    </mat-checkbox>
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <mat-checkbox (click)="$event.stopPropagation()"
+                                        (change)="$event ? selection.toggle(row) : null"
+                                        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                                    </mat-checkbox>
+                                </td>
+                            </ng-container>
 
-                </tr>
-            </tbody>
-        </table>
+                            <ng-container matColumnDef="position">
+                                <th mat-header-cell *matHeaderCellDef> Position </th>
+                                <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="tipoCartera">
+                                <th mat-header-cell *matHeaderCellDef> Tipo Cartera </th>
+                                <td mat-cell *matCellDef="let element"> {{element.tipoCartera}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="placa">
+                                <th mat-header-cell *matHeaderCellDef> Placa </th>
+                                <td mat-cell *matCellDef="let element"> {{element.placa}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="tipoDocumento">
+                                <th mat-header-cell *matHeaderCellDef> Tipo Documento </th>
+                                <td mat-cell *matCellDef="let element"> {{element.tipoDocumento}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="numeroDocumento">
+                                <th mat-header-cell *matHeaderCellDef> Numero Documento </th>
+                                <td mat-cell *matCellDef="let element"> {{element.numeroDocumento}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="nombre">
+                                <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                                <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="fechaCartera">
+                                <th mat-header-cell *matHeaderCellDef> Fecha Cartera </th>
+                                <td mat-cell *matCellDef="let element"> {{element.fechaCartera}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="valorCartera">
+                                <th mat-header-cell *matHeaderCellDef> Valor Cartera </th>
+                                <td mat-cell *matCellDef="let element"> {{element.valorCartera}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="totalDescuentoCapital">
+                                <th mat-header-cell *matHeaderCellDef> Total Descuento </th>
+                                <td mat-cell *matCellDef="let element"> {{element.totalDescuentoCapital}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="valorIntereses">
+                                <th mat-header-cell *matHeaderCellDef> Valor Intereses </th>
+                                <td mat-cell *matCellDef="let element"> {{element.valorIntereses}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="valorCostas">
+                                <th mat-header-cell *matHeaderCellDef> Valor Costas </th>
+                                <td mat-cell *matCellDef="let element"> {{element.valorCostas}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="cobroSistemantizacion">
+                                <th mat-header-cell *matHeaderCellDef> Sistemantizacion </th>
+                                <td mat-cell *matCellDef="let element"> {{element.cobroSistemantizacion}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="totalCartera">
+                                <th mat-header-cell *matHeaderCellDef> Total Cartera </th>
+                                <td mat-cell *matCellDef="let element"> {{element.totalCartera}} </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                (click)="selection.toggle(row)">
+                            </tr>
+                        </table>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
+        </mat-card>
+        <mat-card>
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">RESUMEN DERECHO DE TRANSITO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">EMBARGADO</th>
+                                <td>NO</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">TOTAL MULTA</th>
+                                <td>1232422</td>
+                            </tr>
+                            <tr style="background-color: orange;">
+                                <th scope="row">TOTAL INTERESES</th>
+                                <td>2342342</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">TOTAL SISTEMATIZACIÓN</th>
+                                <td>234234</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">TOTAL RECIBO DE PAGO</th>
+                                <td>2342342</td>
+                            </tr>
+                            <tr style="background-color: orange;">
+                                <th scope="row">TOTAL DESCUENTO CARTERA</th>
+                                <td>2342342</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">TOTAL DE CARTERA</th>
+                                <td>
+                                    <label style="color: rgb(106, 166, 245);"> 234234</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">CANTIDAD REGISTROS</th>
+                                <td>234234</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">FECHA CONSULTA</th>
+                                <td>234234</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <mat-accordion>
+                    <!-- #docregion basic-panel -->
+                    <!-- #docregion hide-toggle -->
+                    <mat-expansion-panel hideToggle>
+                        <!-- #enddocregion hide-toggle -->
+                        <mat-expansion-panel-header>
+                            <mat-panel-description>
+                                Contenido derechos de tránsito
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+                            <!-- Checkbox Column -->
+                            <ng-container matColumnDef="select">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                                        [checked]="selection.hasValue() && isAllSelected()"
+                                        [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                        [aria-label]="checkboxLabel()">
+                                    </mat-checkbox>
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <mat-checkbox (click)="$event.stopPropagation()"
+                                        (change)="$event ? selection.toggle(row) : null"
+                                        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                                    </mat-checkbox>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="position">
+                                <th mat-header-cell *matHeaderCellDef> Position </th>
+                                <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="tipoCartera">
+                                <th mat-header-cell *matHeaderCellDef> Tipo Cartera </th>
+                                <td mat-cell *matCellDef="let element"> {{element.tipoCartera}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="placa">
+                                <th mat-header-cell *matHeaderCellDef> Placa </th>
+                                <td mat-cell *matCellDef="let element"> {{element.placa}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="tipoDocumento">
+                                <th mat-header-cell *matHeaderCellDef> Tipo Documento </th>
+                                <td mat-cell *matCellDef="let element"> {{element.tipoDocumento}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="numeroDocumento">
+                                <th mat-header-cell *matHeaderCellDef> Numero Documento </th>
+                                <td mat-cell *matCellDef="let element"> {{element.numeroDocumento}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="nombre">
+                                <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                                <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="fechaCartera">
+                                <th mat-header-cell *matHeaderCellDef> Fecha Cartera </th>
+                                <td mat-cell *matCellDef="let element"> {{element.fechaCartera}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="valorCartera">
+                                <th mat-header-cell *matHeaderCellDef> Valor Cartera </th>
+                                <td mat-cell *matCellDef="let element"> {{element.valorCartera}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="totalDescuentoCapital">
+                                <th mat-header-cell *matHeaderCellDef> Total Descuento </th>
+                                <td mat-cell *matCellDef="let element"> {{element.totalDescuentoCapital}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="valorIntereses">
+                                <th mat-header-cell *matHeaderCellDef> Valor Intereses </th>
+                                <td mat-cell *matCellDef="let element"> {{element.valorIntereses}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="valorCostas">
+                                <th mat-header-cell *matHeaderCellDef> Valor Costas </th>
+                                <td mat-cell *matCellDef="let element"> {{element.valorCostas}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="cobroSistemantizacion">
+                                <th mat-header-cell *matHeaderCellDef> Sistemantizacion </th>
+                                <td mat-cell *matCellDef="let element"> {{element.cobroSistemantizacion}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="totalCartera">
+                                <th mat-header-cell *matHeaderCellDef> Total Cartera </th>
+                                <td mat-cell *matCellDef="let element"> {{element.totalCartera}} </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                (click)="selection.toggle(row)">
+                            </tr>
+                        </table>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
+        </mat-card>
+        <mat-card>
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">TOTAL CARTERA MULTAS + DERECHOS DE TRANSITO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">TOTAL CARTERA POR MULTAS</th>
+                                <td>2342342</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">TOTAL CARTERA POR DERECHOS DE TRANSITO</th>
+                                <td>1232422</td>
+                            </tr>
+                            <tr style="background-color: rgb(131, 189, 255);">
+                                <th scope="row">TOTAL CARTERA</th>
+                                <td>234545345</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </mat-card>
+
     </div>
 
+    <ng-template #mymodal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Bootstrap Modal</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            {{cartera.descripcion}}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+        </div>
+    </ng-template>
 </div>

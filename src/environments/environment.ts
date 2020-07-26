@@ -4,7 +4,9 @@
 
 export const environment = {
   production: false,
-  urlApiTest: 'http://192.168.36.30:8000/PortalPagoAPI/ServiciosRest/'
+  urlApiTest: 'http://192.168.36.30:8000/PortalPagoAPI/ServiciosRest/',
+  //urlApiTest: 'http://172.16.40.44:8086/api/portal_pago/PortalPagoAPI/ServiciosRest/',
+  urlApiSeguridad: "http://172.16.40.44:8087/api/seguridad_portal_pago/SeguridadPortalPagoAPI/"
 };
 
 /*

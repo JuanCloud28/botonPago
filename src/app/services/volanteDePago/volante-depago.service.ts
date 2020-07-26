@@ -15,6 +15,7 @@ import { TipoPagoPSE } from 'src/app/models/TipoDePago/TipoPagoPSE';
 import { environment } from './../../../environments/environment'
 import { Cartera } from 'src/app/models/cartera/Cartera';
 import { CarteraRequest } from 'src/app/models/cartera/CarteraRequest';
+import { JsonPipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -30,8 +31,9 @@ export class VolanteDepagoService {
     return this.http.post<PersonaMulta>('https://volantespago.free.beeceptor.com/volantePago', this.volantePagoRequest).pipe(catchError(this.handleError));
   }
 
-  consultarCartera(carteraRequest :CarteraRequest): Observable<Cartera> {
-    return this.http.post<Cartera>( environment.urlApiTest + 'consultaObligaciones',carteraRequest ).pipe(catchError(this.handleError));
+  consultarCartera(carteraRequest :CarteraRequest, token:string): Observable<Cartera> {
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}`});
+    return this.http.post<Cartera>( environment.urlApiTest + 'consultaObligaciones',carteraRequest, { headers: headers } ).pipe(catchError(this.handleError));
   }
 
   traerToken(): Observable<TokenResponse> {
@@ -40,23 +42,27 @@ export class VolanteDepagoService {
     return this.http.post<TokenResponse>('http://192.168.44.22:8091/Login/ingresarApp', this.credenciales).pipe(catchError(this.handleError));
   }
 
-  traerReferenciaPSE(referenciaRequest :ReferenciaRequest) : Observable<ReferenciaResponse>
+  traerReferenciaPSE(referenciaRequest :ReferenciaRequest, token: string) : Observable<ReferenciaResponse>
   {
-    return this.http.post<ReferenciaResponse>( environment.urlApiTest +'generarVolantePago',referenciaRequest).pipe(catchError(this.handleError));
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}`});
+    return this.http.post<ReferenciaResponse>( environment.urlApiTest +'generarVolantePago',referenciaRequest, { headers: headers }).pipe(catchError(this.handleError));
   }
 
-  consultarCatalogoTipoDoc() : Observable<TipoDocumento[]>
-  {
-    return this.http.get<TipoDocumento[]>(environment.urlApiTest +'obtenerTiposIdentificacion').pipe(catchError(this.handleError));
+  consultarCatalogoTipoDoc(token: string) : Observable<TipoDocumento[]>
+  {                                   
+    const headers = new HttpHeaders({ 'Authorization':  `Bearer ${token}`});
+    return this.http.get<TipoDocumento[]>(environment.urlApiTest + 'obtenerTiposIdentificacion', { headers: headers } ).pipe(catchError(this.handleError));
   }
 
-  consultarUrlPse (urlPseRequest :UrlPseRequest) :Observable<UrlPseResponse>{
-    return this.http.post<UrlPseResponse>(environment.urlApiTest + 'iniciarPago',urlPseRequest ).pipe(catchError(this.handleError));
+  consultarUrlPse (urlPseRequest :UrlPseRequest, token: string) :Observable<UrlPseResponse>{
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}`});
+    return this.http.post<UrlPseResponse>(environment.urlApiTest + 'iniciarPago',urlPseRequest, { headers: headers } ).pipe(catchError(this.handleError));
   }
 
-  consultarTiposDePago() : Observable<TipoPagoPSE[]>
+  consultarTiposDePago(token: string) : Observable<TipoPagoPSE[]>
   {
-    return this.http.get<TipoPagoPSE[]>( environment.urlApiTest +'obtenerTiposPagoPse').pipe(catchError(this.handleError));
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}`});
+    return this.http.get<TipoPagoPSE[]>( environment.urlApiTest +'obtenerTiposPagoPse', { headers: headers }).pipe(catchError(this.handleError));
   }
 
   handleError(error: HttpErrorResponse) {
@@ -66,7 +72,7 @@ export class VolanteDepagoService {
       errorMessage = `Error: ${error.error.message}`;
     } else {
       // Server-side errors
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}` + JSON.stringify(error);
     }
     window.alert("Se ha presentado un error, por favor intente más tarde o comuniquese con el administrador. ");
     return throwError(errorMessage);
